@@ -1,0 +1,266 @@
+@import url("https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap");
+
+/* ⚠️ FIX 1 — tailwindcss must be imported LAST among @imports */
+@import "tailwindcss";
+
+/* ⚠️ FIX 2 — tailwindcss-animate needed for Radix dropdown animations   */
+/* (animate-in, fade-in-0, zoom-in-95, slide-in-from-top-2 etc.)          */
+/* Install: npm install tailwindcss-animate, then add the plugin below     */
+@plugin "tailwindcss-animate";
+
+:root {
+  /* Backgrounds */
+  --bg: #ffffff;
+  --bg-card: #f7f9fc;
+  --bg-card-hover: #eef2f8;
+  --bg-input: #f1f4f9;
+
+  /* Borders
+   * ⚠️ FIX 3 — rgba(0,0,0,0.06) is nearly invisible and is the root
+   * cause of every "border not visible" complaint. Bumped to 0.10.
+   * --border-accent stays blue-tinted for focused/active states.
+   */
+  --border: rgba(0, 0, 0, 0.1);
+  --border-accent: rgba(94, 186, 255, 0.4);
+
+  /* Text */
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --text-muted: #94a3b8;
+
+  /* Accent */
+  --accent: #3b82f6;
+  --accent-glow: rgba(59, 130, 246, 0.15);
+  --accent-2: #8b5cf6;
+  --accent-2-glow: rgba(139, 92, 246, 0.12);
+
+  /* Status */
+  --success: #10b981;
+  --warning: #f59e0b;
+  --danger: #ef4444;
+
+  /* Tags */
+  --tag-bg: rgba(59, 130, 246, 0.08);
+  --tag-text: #2563eb;
+
+  /* Fonts
+   * ⚠️ FIX 4 — layout.tsx loads "Epunda Sans" via <link> but this file
+   * never registers it in a variable, so it was silently unused.
+   * Added --font-display-alt; swap --font-display if you prefer it.
+   */
+  --font-display: "Syne", sans-serif;
+  --font-display-alt: "Epunda Sans", sans-serif;
+  --font-body: "DM Sans", sans-serif;
+  --font-mono: "DM Mono", monospace;
+
+  /* Radius */
+  --radius: 10px;
+  --radius-sm: 6px;
+  --radius-lg: 16px;
+}
+
+/* ── Reset ─────────────────────────────────────────────────────────── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  font-size: 17px;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: 1rem;
+  line-height: 1.65;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ── Scrollbar ─────────────────────────────────────────────────────── */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg);
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.15);
+  border-radius: 99px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.25);
+}
+
+/* ── Selection ─────────────────────────────────────────────────────── */
+::selection {
+  background: rgba(94, 186, 255, 0.2);
+  color: var(--text-primary);
+}
+
+/* ── Headings ──────────────────────────────────────────────────────── */
+h1,
+h2,
+h3,
+h4,
+h5 {
+  font-family: var(--font-display);
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+
+/* ── Mono ──────────────────────────────────────────────────────────── */
+code,
+pre,
+.mono {
+  font-family: var(--font-mono);
+}
+
+/* ── Focus ring ────────────────────────────────────────────────────── */
+*:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+/* ── Keyframes ─────────────────────────────────────────────────────── */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/*
+ * ⚠️ FIX 5 — Renamed from "spin" to "spin-custom" to avoid colliding
+ * with Tailwind's own built-in @keyframes spin (used by animate-spin).
+ * animate-spin-slow is updated to reference spin-custom.
+ */
+@keyframes spin-custom {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+@keyframes glow-pulse {
+  0%,
+  100% {
+    opacity: 0.4;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+/* ── Utility animation classes ─────────────────────────────────────── */
+.animate-fade-in {
+  animation: fadeIn 0.4s ease forwards;
+}
+.animate-slide-in {
+  animation: slideIn 0.3s ease forwards;
+}
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+.animate-spin-slow {
+  animation: spin-custom 2s linear infinite;
+}
+.animate-glow-pulse {
+  animation: glow-pulse 2s ease-in-out infinite;
+}
+
+/* ── Skeleton loader ───────────────────────────────────────────────── */
+.skeleton {
+  background: linear-gradient(90deg, #f1f5f9 25%, #e2e8f0 50%, #f1f5f9 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: var(--radius);
+}
+
+/* ── Glass surface ─────────────────────────────────────────────────── */
+/* ⚠️ FIX 6 — was defined twice (exact duplicate). Removed the second copy. */
+.glass {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--border);
+}
+
+/* ── Gradient text ─────────────────────────────────────────────────── */
+.gradient-text {
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text; /* standard property alongside -webkit- */
+}
+
+/* ── Dot-grid background ───────────────────────────────────────────── */
+.dot-grid {
+  background-image: radial-gradient(
+    circle,
+    rgba(94, 186, 255, 0.06) 1px,
+    transparent 1px
+  );
+  background-size: 28px 28px;
+}
+
+/* ── AI Query page layout ──────────────────────────────────────────── */
+.ai-query-page {
+  width: 100%;
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 2rem 1rem 1rem;
+}
+
+@media (min-width: 640px) {
+  .ai-query-page {
+    padding: 2.5rem 1.5rem 1.5rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .ai-query-page {
+    padding: 3rem 0 2rem;
+  }
+}
