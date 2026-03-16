@@ -6,7 +6,7 @@ const AUTH_PAGES = ["/login", "/register"];
 export async function middleware(req: NextRequest) {
   const token = await getToken({
     req,
-    secret: process.env.NEXTAUTH_SECRET, // ✅ Fixed
+    secret: process.env.AUTH_SECRET, // ✅ Fixed
   });
 
   const { pathname } = req.nextUrl;
